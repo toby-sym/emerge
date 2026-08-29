@@ -1,15 +1,22 @@
 ﻿using Emerge.Core.Simulation;
 
-const int ticksPerRun = 500;
-const int logInterval = 50;
+int seed = 48192837;
+int ticks = 500;
+int logInterval = 50;
 
-int[] seeds = { 48192837, 12345, 999, 2026, 555111 };
-
-foreach (var seed in seeds)
+for (int i = 0; i < args.Length; i++)
 {
-    RunSimulation(seed, ticksPerRun, logInterval);
-    Console.WriteLine();
+    if (args[i] == "--seed" && i + 1 < args.Length && int.TryParse(args[i + 1], out var s))
+    {
+        seed = s;
+    }
+    else if (args[i] == "--ticks" && i + 1 < args.Length && int.TryParse(args[i + 1], out var t))
+    {
+        ticks = t;
+    }
 }
+
+RunSimulation(seed, ticks, logInterval);
 
 static void RunSimulation(int seed, int maxTicks, int logInterval)
 {
@@ -23,7 +30,7 @@ static void RunSimulation(int seed, int maxTicks, int logInterval)
 
     var simulation = new Simulation(config);
 
-    Console.WriteLine($"=== Seed: {seed} ===");
+    Console.WriteLine($"=== Seed: {seed}, MaxTicks: {maxTicks} ===");
 
     for (int i = 0; i < maxTicks && simulation.IsRunning; i++)
     {
