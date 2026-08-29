@@ -28,7 +28,7 @@ jobs:
         run: dotnet restore -p:PublishReadyToRun=true
 
       - name: Build (all projects as Release)
-        run: dotnet build --no-restore --configuration Release -p:PublishReadyToRun=true
+        run: dotnet build --no-restore --configuration Release
 
       - name: Run headless smoke test (Emerge.Experiments)
         run: dotnet run --project Emerge.Experiments --no-build --configuration Release
