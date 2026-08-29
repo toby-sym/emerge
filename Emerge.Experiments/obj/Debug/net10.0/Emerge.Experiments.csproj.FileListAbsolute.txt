@@ -1,0 +1,15 @@
+S:\REPOs\emerge\Emerge.Experiments\bin\Debug\net10.0\Emerge.Experiments.exe
+S:\REPOs\emerge\Emerge.Experiments\bin\Debug\net10.0\Emerge.Experiments.deps.json
+S:\REPOs\emerge\Emerge.Experiments\bin\Debug\net10.0\Emerge.Experiments.runtimeconfig.json
+S:\REPOs\emerge\Emerge.Experiments\bin\Debug\net10.0\Emerge.Experiments.dll
+S:\REPOs\emerge\Emerge.Experiments\bin\Debug\net10.0\Emerge.Experiments.pdb
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\Emerge.Experiments.GeneratedMSBuildEditorConfig.editorconfig
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\Emerge.Experiments.AssemblyInfoInputs.cache
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\Emerge.Experiments.AssemblyInfo.cs
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\Emerge.Experiments.csproj.CoreCompileInputs.cache
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\Emerge.Experiments.sourcelink.json
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\Emerge.Experiments.dll
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\refint\Emerge.Experiments.dll
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\Emerge.Experiments.pdb
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\Emerge.Experiments.genruntimeconfig.cache
+S:\REPOs\emerge\Emerge.Experiments\obj\Debug\net10.0\ref\Emerge.Experiments.dll

@@ -1,2 +1,9 @@
 <Solution>
+  <Project Path="Emerge.AI/Emerge.AI.csproj" />
+  <Project Path="Emerge.Core/Emerge.Core.csproj" />
+  <Project Path="Emerge.Desktop/Emerge.Desktop.csproj">
+    <Platform Project="x86" />
+  </Project>
+  <Project Path="Emerge.Experiments/Emerge.Experiments.csproj" />
+  <Project Path="Emerge.Rendering/Emerge.Rendering.csproj" />
 </Solution>
