@@ -12,6 +12,7 @@ public sealed class Simulation
     public World World { get; }
     public int TickCount { get; private set; }
     public bool IsRunning { get; private set; } = true;
+    public int TotalBirths { get; private set; }
 
     public Simulation(SimulationConfig config)
     {
@@ -46,36 +47,32 @@ public sealed class Simulation
     }
 
     public void Tick()
+{
+    TickCount++;
+
+    SpawnFood();
+
+    var newborns = new List<Organism>();
+
+    foreach (var organism in World.Organisms)
     {
-        TickCount++;
+        UpdateOrganism(organism);
 
-        SpawnFood();
-
-        foreach (var organism in World.Organisms)
+        var child = TryReproduce(organism);
+        if (child is not null)
         {
-            UpdateOrganism(organism);
-        }
-
-        World.Organisms.RemoveAll(o => !o.IsAlive);
-
-        if (World.Organisms.Count == 0)
-        {
-            IsRunning = false;
+            newborns.Add(child);
         }
     }
 
-    private void SpawnFood()
+    World.Organisms.AddRange(newborns);
+    World.Organisms.RemoveAll(o => !o.IsAlive);
+
+    if (World.Organisms.Count == 0)
     {
-        int count = (int)_config.FoodSpawnRate;
-        for (int i = 0; i < count; i++)
-        {
-            World.Food.Add(new Food
-            {
-                X = _random.NextDouble() * World.Width,
-                Y = _random.NextDouble() * World.Height
-            });
-        }
+        IsRunning = false;
     }
+}
 
     private void UpdateOrganism(Organism organism)
     {
@@ -108,5 +105,28 @@ public sealed class Simulation
         double dx = x1 - x2;
         double dy = y1 - y2;
         return Math.Sqrt(dx * dx + dy * dy);
+    }
+
+    private Organism? TryReproduce(Organism parent)
+    {
+        if (parent.Energy < _config.ReproductionEnergyThreshold)
+        {
+            return null;
+        }
+
+        parent.Energy -= _config.ReproductionEnergyCost;
+
+        var childGenome = parent.Genome.Mutate(_random, _config.MutationRate, _config.MutationAmount);
+        
+        TotalBirths++;
+
+        return new Organism
+        {
+            Genome = childGenome,
+            X = parent.X,
+            Y = parent.Y,
+            Energy = _config.ReproductionEnergyCost * 0.5,
+            Health = 100
+        };
     }
 }
