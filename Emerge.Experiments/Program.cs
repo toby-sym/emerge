@@ -15,4 +15,4 @@ for (int i = 0; i < 500 && simulation.IsRunning; i++)
     simulation.Tick();
 }
 
-Console.WriteLine($"Ticks run: {simulation.TickCount}, Population: {simulation.World.Organisms.Count}");
+Console.WriteLine($"Ticks run: {simulation.TickCount}, Population: {simulation.World.Organisms.Count}, Food remaining: {simulation.World.Food.Count}");

@@ -7,6 +7,7 @@ namespace Emerge.Core.Simulation;
 public sealed class Simulation
 {
     private readonly Random _random;
+    private readonly SimulationConfig _config;
 
     public World World { get; }
     public int TickCount { get; private set; }
@@ -14,6 +15,7 @@ public sealed class Simulation
 
     public Simulation(SimulationConfig config)
     {
+        _config = config;
         _random = new Random(config.Seed);
         World = new World { Width = config.WorldWidth, Height = config.WorldHeight };
 
@@ -47,6 +49,8 @@ public sealed class Simulation
     {
         TickCount++;
 
+        SpawnFood();
+
         foreach (var organism in World.Organisms)
         {
             UpdateOrganism(organism);
@@ -60,6 +64,19 @@ public sealed class Simulation
         }
     }
 
+    private void SpawnFood()
+    {
+        int count = (int)_config.FoodSpawnRate;
+        for (int i = 0; i < count; i++)
+        {
+            World.Food.Add(new Food
+            {
+                X = _random.NextDouble() * World.Width,
+                Y = _random.NextDouble() * World.Height
+            });
+        }
+    }
+
     private void UpdateOrganism(Organism organism)
     {
         organism.VelocityX = (_random.NextDouble() - 0.5) * organism.Genome.Speed;
@@ -70,5 +87,26 @@ public sealed class Simulation
 
         organism.Age++;
         organism.Energy -= organism.Genome.Metabolism;
+
+        TryEat(organism);
+    }
+
+    private void TryEat(Organism organism)
+    {
+        var eaten = World.Food.FirstOrDefault(f =>
+            Distance(organism.X, organism.Y, f.X, f.Y) <= _config.EatDistance);
+
+        if (eaten is not null)
+        {
+            organism.Energy += eaten.EnergyValue;
+            World.Food.Remove(eaten);
+        }
+    }
+
+    private static double Distance(double x1, double y1, double x2, double y2)
+    {
+        double dx = x1 - x2;
+        double dy = y1 - y2;
+        return Math.Sqrt(dx * dx + dy * dy);
     }
 }
