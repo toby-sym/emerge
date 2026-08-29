@@ -1,27 +1,55 @@
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.Graphics.Canvas.UI.Xaml;
+using Windows.UI;
+using Emerge.Core.Simulation;
+using Emerge.Rendering;
+using Emerge.Desktop;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+namespace Emerge.Desktop;
 
-namespace Emerge_Desktop;
-
-/// <summary>
-/// The application window. This hosts a Frame that displays pages. Add your
-/// UI and logic to MainPage.xaml / MainPage.xaml.cs instead of here so you
-/// can use Page features such as navigation events and the Loaded lifecycle.
-/// </summary>
 public sealed partial class MainWindow : Window
 {
+    private readonly Simulation _simulation;
+
     public MainWindow()
     {
-        InitializeComponent();
+        this.InitializeComponent();
 
-        ExtendsContentIntoTitleBar = true;
-        SetTitleBar(AppTitleBar);
+        this.SystemBackdrop = new MicaBackdrop();
+        this.ExtendsContentIntoTitleBar = true;
+        this.SetTitleBar(AppTitleBar);
 
-        AppWindow.SetIcon("Assets/AppIcon.ico");
+        // Fix 1: Initialize required SimulationConfig properties
+        var config = new SimulationConfig
+        {
+            Seed = 48192837,
+            WorldWidth = 800,
+            WorldHeight = 600,
+            InitialPopulation = 100 
+        };
+        _simulation = new Simulation(config);
+    }
 
-        // Navigate the root frame to the main page on startup.
-        RootFrame.Navigate(typeof(MainPage));
+    private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
+    {
+    }
+
+    private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
+    {
+        _simulation.Tick();
+
+        var session = args.DrawingSession;
+        session.Clear(Color.FromArgb(255, 18, 18, 18));
+
+        foreach (var cmd in WorldRenderer.Render(_simulation.World))
+        {
+            session.FillCircle(
+                (float)cmd.X,
+                (float)cmd.Y,
+                (float)cmd.Radius,
+                Color.FromArgb(255, cmd.R, cmd.G, cmd.B)
+            );
+        }
     }
 }

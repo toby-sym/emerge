@@ -1,34 +1,66 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <Window
-    x:Class="Emerge_Desktop.MainWindow"
+    x:Class="Emerge.Desktop.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Emerge_Desktop"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Emerge.Desktop"
-    mc:Ignorable="d">
-    <Window.SystemBackdrop>
-        <MicaBackdrop />
-    </Window.SystemBackdrop>
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    mc:Ignorable="d"
+    Title="Emerge Simulation Engine">
 
-    <Grid>
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TitleBar x:Name="AppTitleBar" Title="Emerge.Desktop">
-            <TitleBar.IconSource>
-                <ImageIconSource ImageSource="Assets/AppIcon.ico" />
-            </TitleBar.IconSource>
-        </TitleBar>
+        <!-- Custom Window Title Bar -->
+        <Grid x:Name="AppTitleBar" Grid.Row="0" Background="Transparent" Padding="12,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+                <Image Source="Assets/Square44x44Logo.targetsize-24_altform-unplated.png" Width="16" Height="16"/>
+                <TextBlock Text="Emerge Simulation Engine" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
 
-        <!--
-            The Frame hosts pages for your application content. Add your UI to
-            MainPage.xaml rather than here so you can use Page features such as
-            navigation events and the Loaded lifecycle.
-        -->
-        <Frame x:Name="RootFrame" Grid.Row="1" />
+        <!-- Main Fluent Navigation View -->
+        <NavigationView Grid.Row="1" PaneDisplayMode="LeftCompact" IsBackButtonVisible="Collapsed">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Simulation" Icon="Play"/>
+                <NavigationViewItem Content="Analytics" Icon="FourBars"/>
+                <NavigationViewItem Content="Genetics" Icon="Document"/>
+            </NavigationView.MenuItems>
+
+            <Grid Padding="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Hardware-Accelerated Canvas -->
+                <Border Grid.Column="0" CornerRadius="8" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="0,0,12,0">
+                    <canvas:CanvasAnimatedControl x:Name="Canvas" CreateResources="Canvas_CreateResources" Draw="Canvas_Draw"/>
+                </Border>
+
+                <!-- Sidebar Control Panel -->
+                <StackPanel Grid.Column="1" Spacing="12">
+                    <TextBlock Text="Simulation Controls" Style="{StaticResource TitleTextBlockStyle}"/>
+
+                    <Expander Header="Environment Settings" IsExpanded="True" HorizontalAlignment="Stretch">
+                        <StackPanel Spacing="8" Padding="12">
+                            <TextBlock Text="World Scale"/>
+                            <Slider Minimum="1" Maximum="100" Value="50"/>
+                            <ToggleSwitch Header="Enable Mutation Pass" IsOn="True"/>
+                        </StackPanel>
+                    </Expander>
+
+                    <Expander Header="Organisms" HorizontalAlignment="Stretch">
+                        <StackPanel Spacing="8" Padding="12">
+                            <TextBlock Text="Initial Population"/>
+                            <NumberBox Value="100" SpinButtonPlacementMode="Inline"/>
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </Grid>
+        </NavigationView>
     </Grid>
 </Window>
