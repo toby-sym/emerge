@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Emerge.Desktop (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Emerge.Desktop (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
