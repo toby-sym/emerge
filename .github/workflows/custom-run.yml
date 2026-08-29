@@ -26,12 +26,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+          cache: true
+          cache-dependency-path: '**/*.csproj'
 
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore -p:PublishReadyToRun=true
 
       - name: Build
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build --no-restore --configuration Release -p:PublishReadyToRun=true
 
       - name: Run custom simulation
         run: dotnet run --project Emerge.Experiments --no-build --configuration Release -- --seed ${{ inputs.seed }} --ticks ${{ inputs.ticks }}
