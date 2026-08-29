@@ -53,6 +53,10 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.4.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools.WinApp" Version="0.6.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Emerge.Core\Emerge.Core.csproj" />
+    <ProjectReference Include="..\Emerge.Rendering\Emerge.Rendering.csproj" />
+  </ItemGroup>
 
   <!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
