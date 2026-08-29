@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d"
     Title="Emerge Simulation Engine">
 
@@ -23,44 +22,20 @@
         </Grid>
 
         <!-- Main Fluent Navigation View -->
-        <NavigationView Grid.Row="1" PaneDisplayMode="LeftCompact" IsBackButtonVisible="Collapsed">
+        <NavigationView 
+            x:Name="NavView" 
+            Grid.Row="1" 
+            PaneDisplayMode="LeftCompact" 
+            IsBackButtonVisible="Collapsed"
+            SelectionChanged="NavView_SelectionChanged">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Simulation" Icon="Play"/>
-                <NavigationViewItem Content="Analytics" Icon="FourBars"/>
-                <NavigationViewItem Content="Genetics" Icon="Document"/>
+                <NavigationViewItem x:Name="SimNavItm" Content="Simulation" Icon="Play" Tag="Simulation"/>
+                <NavigationViewItem Content="Analytics" Icon="FourBars" Tag="Analytics"/>
+                <NavigationViewItem Content="Genetics" Icon="Document" Tag="Genetics"/>
             </NavigationView.MenuItems>
 
-            <Grid Padding="16">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="300"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- Hardware-Accelerated Canvas -->
-                <Border Grid.Column="0" CornerRadius="8" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="0,0,12,0">
-                    <canvas:CanvasAnimatedControl x:Name="Canvas" CreateResources="Canvas_CreateResources" Draw="Canvas_Draw"/>
-                </Border>
-
-                <!-- Sidebar Control Panel -->
-                <StackPanel Grid.Column="1" Spacing="12">
-                    <TextBlock Text="Simulation Controls" Style="{StaticResource TitleTextBlockStyle}"/>
-
-                    <Expander Header="Environment Settings" IsExpanded="True" HorizontalAlignment="Stretch">
-                        <StackPanel Spacing="8" Padding="12">
-                            <TextBlock Text="World Scale"/>
-                            <Slider Minimum="1" Maximum="100" Value="50"/>
-                            <ToggleSwitch Header="Enable Mutation Pass" IsOn="True"/>
-                        </StackPanel>
-                    </Expander>
-
-                    <Expander Header="Organisms" HorizontalAlignment="Stretch">
-                        <StackPanel Spacing="8" Padding="12">
-                            <TextBlock Text="Initial Population"/>
-                            <NumberBox Value="100" SpinButtonPlacementMode="Inline"/>
-                        </StackPanel>
-                    </Expander>
-                </StackPanel>
-            </Grid>
+            <!-- Frame hosting the active page -->
+            <Frame x:Name="ContentFrame"/>
         </NavigationView>
     </Grid>
 </Window>

@@ -1,55 +1,62 @@
+using System;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Windows.UI;
 using Emerge.Core.Simulation;
 using Emerge.Rendering;
-using Emerge.Desktop;
 
 namespace Emerge.Desktop;
 
 public sealed partial class MainWindow : Window
 {
-    private readonly Simulation _simulation;
+    public static Simulation SimulationInstance { get; private set; } = null!;
+    public static SimulationConfig CurrentConfig { get; set; }
 
     public MainWindow()
     {
         this.InitializeComponent();
 
-        this.SystemBackdrop = new MicaBackdrop();
         this.ExtendsContentIntoTitleBar = true;
         this.SetTitleBar(AppTitleBar);
 
-        // Fix 1: Initialize required SimulationConfig properties
-        var config = new SimulationConfig
+        CurrentConfig = new SimulationConfig
         {
-            Seed = 48192837,
+            Seed = (int)DateTime.Now.Ticks,
             WorldWidth = 800,
             WorldHeight = 600,
-            InitialPopulation = 100 
+            InitialPopulation = 100
         };
-        _simulation = new Simulation(config);
+
+        SimulationInstance = new Simulation(CurrentConfig);
+        NavView.SelectedItem = SimNavItm;
     }
 
-    private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
+    private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-    }
+        if (args.IsSettingsSelected) return;
 
-    private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
-    {
-        _simulation.Tick();
+        var selectedItem = (NavigationViewItem)args.SelectedItem;
+        string? tag = selectedItem?.Tag?.ToString();
 
-        var session = args.DrawingSession;
-        session.Clear(Color.FromArgb(255, 18, 18, 18));
-
-        foreach (var cmd in WorldRenderer.Render(_simulation.World))
+        Type pageType = tag switch
         {
-            session.FillCircle(
-                (float)cmd.X,
-                (float)cmd.Y,
-                (float)cmd.Radius,
-                Color.FromArgb(255, cmd.R, cmd.G, cmd.B)
-            );
+            "Simulation" => typeof(SimulationPage),
+            "Analytics" => typeof(AnalyticsPage),
+            "Genetics" => typeof(GeneticsPage),
+            _ => typeof(SimulationPage)
+        };
+
+        if (ContentFrame.CurrentSourcePageType != pageType)
+        {
+            ContentFrame.Navigate(pageType);
         }
+    }
+
+    public static void ResetSimulation(SimulationConfig newConfig)
+    {
+        CurrentConfig = newConfig;
+        SimulationInstance = new Simulation(CurrentConfig);
     }
 }

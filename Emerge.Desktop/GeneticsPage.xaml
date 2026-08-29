@@ -1,0 +1,20 @@
+<Page
+    x:Class="Emerge.Desktop.GeneticsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="16" MaxWidth="800" HorizontalAlignment="Left">
+            <TextBlock Text="Genetics &amp; Trait Distribution" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Text="Inspect active allele frequencies, mutation configurations, and dominant organism traits." Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+            <Border Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="8" Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Mutation Pass Status" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <TextBlock Text="Enabled — Random mutations occur per reproduction cycle based on environment pressure." Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

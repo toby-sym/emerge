@@ -1,0 +1,52 @@
+<Page
+    x:Class="Emerge.Desktop.SimulationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="320"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Hardware-Accelerated Canvas -->
+        <Border Grid.Column="0" CornerRadius="8" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="0,0,12,0">
+            <canvas:CanvasAnimatedControl x:Name="Canvas" CreateResources="Canvas_CreateResources" Draw="Canvas_Draw"/>
+        </Border>
+
+        <!-- Sidebar Control Panel -->
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="12">
+                <TextBlock Text="Simulation Controls" Style="{StaticResource TitleTextBlockStyle}"/>
+
+                <!-- Playback State Buttons -->
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button x:Name="BtnStart" Content="Start" Click="BtnStart_Click" Style="{StaticResource AccentButtonStyle}" Width="92"/>
+                    <Button x:Name="BtnPause" Content="Pause" Click="BtnPause_Click" Width="92"/>
+                    <Button Content="Reset" Click="BtnReset_Click" Width="92"/>
+                </StackPanel>
+
+                <Expander Header="Environment Settings" IsExpanded="True" HorizontalAlignment="Stretch">
+                    <StackPanel Spacing="8" Padding="12">
+                        <TextBlock Text="Random Seed"/>
+                        <TextBox x:Name="TxtSeed" PlaceholderText="Enter seed (leave blank for random)"/>
+
+                        <TextBlock Text="World Scale"/>
+                        <Slider x:Name="SliderScale" Minimum="1" Maximum="100" Value="50"/>
+
+                        <ToggleSwitch x:Name="ToggleMutation" Header="Enable Mutation Pass" IsOn="True"/>
+                    </StackPanel>
+                </Expander>
+
+                <Expander Header="Organisms" IsExpanded="True" HorizontalAlignment="Stretch">
+                    <StackPanel Spacing="8" Padding="12">
+                        <TextBlock Text="Initial Population"/>
+                        <NumberBox x:Name="NumPopulation" Value="100" SpinButtonPlacementMode="Inline" Minimum="10" Maximum="1000"/>
+                    </StackPanel>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
