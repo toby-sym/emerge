@@ -1,18 +1,9 @@
 name: Custom Simulation Run
 
 on:
-  workflow_dispatch:
-    inputs:
-      seed:
-        description: 'Random seed for the simulation'
-        required: true
-        default: '48192837'
-        type: string
-      ticks:
-        description: 'Number of ticks to run'
-        required: true
-        default: '500'
-        type: string
+  push:
+    branches:
+      - '**'
 
 jobs:
   run-simulation:
