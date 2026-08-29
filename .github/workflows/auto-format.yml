@@ -1,7 +1,7 @@
 name: Auto-Format on Push
 
 on:
-  push:  # any branch
+  push:
 
 jobs:
   lint-and-fix:
@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-          include-prerelease: true
 
       - name: Restore
         run: dotnet restore
@@ -37,10 +36,10 @@ jobs:
           if (-not (Test-Path .xstyler)) { 
             '{"IndentCharacters":"  ","IndentAttributes":false,"FormattingRules":["PutAttributeOnNewLine","PutAttributeOnItsOwnLineIfItHasAttributes"]}' | Out-File -Encoding utf8 .xstyler 
           }
-          xstyler -c .xstyler -f "**/*.xaml"
+          xstyler -c .xstyler -d .           # recursively process all .xaml files
 
       - name: Commit & Push
-        shell: bash  # <--- Use bash to run the script
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
