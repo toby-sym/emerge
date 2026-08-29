@@ -11,8 +11,8 @@ public sealed class Simulation
 
     public World World { get; }
     public int TickCount { get; private set; }
-    public bool IsRunning { get; private set; } = true;
     public int TotalBirths { get; private set; }
+    public bool IsRunning { get; private set; } = true;
 
     public Simulation(SimulationConfig config)
     {
@@ -47,32 +47,45 @@ public sealed class Simulation
     }
 
     public void Tick()
-{
-    TickCount++;
-
-    SpawnFood();
-
-    var newborns = new List<Organism>();
-
-    foreach (var organism in World.Organisms)
     {
-        UpdateOrganism(organism);
+        TickCount++;
 
-        var child = TryReproduce(organism);
-        if (child is not null)
+        SpawnFood();
+
+        var newborns = new List<Organism>();
+
+        foreach (var organism in World.Organisms)
         {
-            newborns.Add(child);
+            UpdateOrganism(organism);
+
+            var child = TryReproduce(organism);
+            if (child is not null)
+            {
+                newborns.Add(child);
+            }
+        }
+
+        World.Organisms.AddRange(newborns);
+        World.Organisms.RemoveAll(o => !o.IsAlive);
+
+        if (World.Organisms.Count == 0)
+        {
+            IsRunning = false;
         }
     }
 
-    World.Organisms.AddRange(newborns);
-    World.Organisms.RemoveAll(o => !o.IsAlive);
-
-    if (World.Organisms.Count == 0)
+    private void SpawnFood()
     {
-        IsRunning = false;
+        int count = (int)_config.FoodSpawnRate;
+        for (int i = 0; i < count; i++)
+        {
+            World.Food.Add(new Food
+            {
+                X = _random.NextDouble() * World.Width,
+                Y = _random.NextDouble() * World.Height
+            });
+        }
     }
-}
 
     private void UpdateOrganism(Organism organism)
     {
@@ -100,13 +113,6 @@ public sealed class Simulation
         }
     }
 
-    private static double Distance(double x1, double y1, double x2, double y2)
-    {
-        double dx = x1 - x2;
-        double dy = y1 - y2;
-        return Math.Sqrt(dx * dx + dy * dy);
-    }
-
     private Organism? TryReproduce(Organism parent)
     {
         if (parent.Energy < _config.ReproductionEnergyThreshold)
@@ -117,7 +123,7 @@ public sealed class Simulation
         parent.Energy -= _config.ReproductionEnergyCost;
 
         var childGenome = parent.Genome.Mutate(_random, _config.MutationRate, _config.MutationAmount);
-        
+
         TotalBirths++;
 
         return new Organism
@@ -128,5 +134,12 @@ public sealed class Simulation
             Energy = _config.ReproductionEnergyCost * 0.5,
             Health = 100
         };
+    }
+
+    private static double Distance(double x1, double y1, double x2, double y2)
+    {
+        double dx = x1 - x2;
+        double dy = y1 - y2;
+        return Math.Sqrt(dx * dx + dy * dy);
     }
 }
