@@ -9,8 +9,6 @@ namespace Emerge.Desktop;
 
 public sealed partial class SimulationPage : Page
 {
-    private bool _isRunning = true;
-
     public SimulationPage()
     {
         this.InitializeComponent();
@@ -24,11 +22,6 @@ public sealed partial class SimulationPage : Page
 
     private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
     {
-        if (_isRunning)
-        {
-            MainWindow.SimulationInstance.Tick();
-        }
-
         var session = args.DrawingSession;
         session.Clear(Color.FromArgb(255, 18, 18, 18));
 
@@ -43,8 +36,8 @@ public sealed partial class SimulationPage : Page
         }
     }
 
-    private void BtnStart_Click(object sender, RoutedEventArgs e) => _isRunning = true;
-    private void BtnPause_Click(object sender, RoutedEventArgs e) => _isRunning = false;
+    private void BtnStart_Click(object sender, RoutedEventArgs e) => MainWindow.StartSimulationLoop();
+    private void BtnPause_Click(object sender, RoutedEventArgs e) => MainWindow.PauseSimulationLoop();
 
     private void BtnReset_Click(object sender, RoutedEventArgs e)
     {
@@ -60,6 +53,6 @@ public sealed partial class SimulationPage : Page
         };
 
         MainWindow.ResetSimulation(newConfig);
-        _isRunning = true;
+        MainWindow.StartSimulationLoop();
     }
 }

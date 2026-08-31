@@ -12,6 +12,7 @@ namespace Emerge.Desktop;
 public sealed partial class MainWindow : Window
 {
     public static Simulation SimulationInstance { get; private set; } = null!;
+    public static SimulationLoop SimulationLoop { get; private set; } = null!;
     public static SimulationConfig CurrentConfig { get; set; }
 
     public MainWindow()
@@ -30,6 +31,8 @@ public sealed partial class MainWindow : Window
         };
 
         SimulationInstance = new Simulation(CurrentConfig);
+        SimulationLoop = new SimulationLoop(SimulationInstance, 50);
+        SimulationLoop.Start();
         NavView.SelectedItem = SimNavItm;
     }
 
@@ -56,7 +59,15 @@ public sealed partial class MainWindow : Window
 
     public static void ResetSimulation(SimulationConfig newConfig)
     {
+        SimulationLoop?.Stop();
+
         CurrentConfig = newConfig;
         SimulationInstance = new Simulation(CurrentConfig);
+        SimulationLoop = new SimulationLoop(SimulationInstance, 50);
+        SimulationLoop.Start();
     }
+
+    public static void StartSimulationLoop() => SimulationLoop?.Start();
+
+    public static void PauseSimulationLoop() => SimulationLoop?.Stop();
 }

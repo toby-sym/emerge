@@ -14,6 +14,10 @@ public sealed class Simulation
     public int TotalBirths { get; private set; }
     public bool IsRunning { get; private set; } = true;
 
+    public void Start() => IsRunning = true;
+
+    public void Stop() => IsRunning = false;
+
     public Simulation(SimulationConfig config)
     {
         _config = config;
@@ -48,29 +52,32 @@ public sealed class Simulation
 
     public void Tick()
     {
-        TickCount++;
-
-        SpawnFood();
-
-        var newborns = new List<Organism>();
-
-        foreach (var organism in World.Organisms)
+        lock (World.SyncRoot)
         {
-            UpdateOrganism(organism);
+            TickCount++;
 
-            var child = TryReproduce(organism);
-            if (child is not null)
+            SpawnFood();
+
+            var newborns = new List<Organism>();
+
+            foreach (var organism in World.Organisms)
             {
-                newborns.Add(child);
+                UpdateOrganism(organism);
+
+                var child = TryReproduce(organism);
+                if (child is not null)
+                {
+                    newborns.Add(child);
+                }
             }
-        }
 
-        World.Organisms.AddRange(newborns);
-        World.Organisms.RemoveAll(o => !o.IsAlive);
+            World.Organisms.AddRange(newborns);
+            World.Organisms.RemoveAll(o => !o.IsAlive);
 
-        if (World.Organisms.Count == 0)
-        {
-            IsRunning = false;
+            if (World.Organisms.Count == 0)
+            {
+                IsRunning = false;
+            }
         }
     }
 

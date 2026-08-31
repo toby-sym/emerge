@@ -37,8 +37,14 @@ public sealed partial class AnalyticsPage : Page
     var world = MainWindow.SimulationInstance?.World;
     if (world != null)
     {
-        int popCount = world.Organisms?.Count ?? 0;
-        int foodCount = world.Food?.Count ?? 0;
+        int popCount;
+        int foodCount;
+
+        lock (world.SyncRoot)
+        {
+            popCount = world.Organisms.Count;
+            foodCount = world.Food.Count;
+        }
 
         long currentTick = MainWindow.SimulationInstance.TickCount;
 
