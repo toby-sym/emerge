@@ -2,6 +2,7 @@
     x:Class="Emerge.Desktop.AnalyticsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <ScrollViewer Padding="24">
@@ -39,11 +40,25 @@
                 </Border>
             </Grid>
 
-            <!-- Status / Info Box -->
+            <!-- Real-Time Telemetry Chart -->
             <Border Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="8" Padding="16">
-                <StackPanel Spacing="8">
-                    <TextBlock Text="Performance Health" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                    <TextBlock Text="The simulation engine is operating at nominal tick rates. Hardware acceleration via Win2D is active." Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <StackPanel Spacing="12">
+                    <Grid>
+                        <TextBlock Text="Population &amp; Food Telemetry" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                        <!-- Chart Legend -->
+                        <StackPanel Orientation="Horizontal" Spacing="16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <Ellipse Width="10" Height="10" Fill="#0078D4"/>
+                                <TextBlock Text="Population" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <Ellipse Width="10" Height="10" Fill="#107C41"/>
+                                <TextBlock Text="Food" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <canvas:CanvasControl x:Name="ChartCanvas" Height="220" Draw="ChartCanvas_Draw"/>
                 </StackPanel>
             </Border>
         </StackPanel>
